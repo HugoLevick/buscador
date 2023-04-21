@@ -1,12 +1,8 @@
-function autocomplete(inp, data) {
-	/*the autocomplete function takes two arguments,
-	the text field element and an dataay of possible autocompleted values:*/
+function autocomplete(inp, data) { // the function take two arguments, the input data field and the data
 	var currentFocus;
-	/*execute a function when someone writes in the text field:*/
-	inp.addEventListener("input", function (e) {
+	inp.addEventListener("input", function(e) { // execute a function when someone writes in the text field
 		var a, b, i, val = this.value;
-		/*close any already open lists of autocompleted values*/
-		closeAllLists();
+		closeAllLists(); // close any already open lists of autocompleted values
 		if (!val) { return false; }
 		currentFocus = -1;
 		/*create a DIV element that will contain the items (values):*/
