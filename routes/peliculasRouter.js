@@ -1,7 +1,11 @@
 const express = require("express");
-const cinema = require("../connectDatabase").cinema;
+const bodyParser = require("body-parser");
+//Usado para validacion de id
+const ValidarMongoId = require("mongodb").ObjectId.isValid;
+const movies = require("./schemas/pelicula.schema");
 
 const peliculasRouter = express.Router();
+peliculasRouter.use(bodyParser.json());
 
 const peliculas = [
   {
@@ -68,36 +72,91 @@ const peliculas = [
 
 // GET todas las peliculas
 peliculasRouter.get("/", async function (req, res) {
-  res.send(peliculas);
-  //res.send(await cinema.findOne({}));
+  const search = req.query.s;
+  res.send(
+    await movies.find(
+      search ? { titulo: new RegExp(`(.+)?${search}(.+)?`) } : undefined
+    )
+  );
 });
 
-peliculasRouter.get("/:id", async (req, res) => {
-  const idPelicula = req.params.id;
-  const pelicula = peliculas.find((p) => p.id == idPelicula);
+async function encontrarPelicula(terminoBusqueda) {
+  let pelicula;
+  if (ValidarMongoId(terminoBusqueda))
+    pelicula = await movies.findOne({ _id: terminoBusqueda });
+  else pelicula = await movies.findOne({ titulo: terminoBusqueda });
+
   if (!pelicula) {
-    res.statusCode = 404;
-    res.send({ message: "Pelicula no encontrada" });
-    return;
+    throw new Error("Pelicula no encontrada");
   }
 
-  res.send(pelicula);
-});
+  return pelicula;
+}
 
-peliculasRouter.delete("/:id", async (req, res) => {
-  res.send({ message: "Pelicula eliminada" });
+// GET pelicula por id o titulo
+peliculasRouter.get("/:termino", async (req, res) => {
+  try {
+    const pelicula = await encontrarPelicula(req.params.termino);
+    res.send(pelicula);
+  } catch (error) {
+    res.statusCode = 404;
+    res.send({ message: "Pelicula no encontrada" });
+  }
 });
 
 // POST nueva pelicula
 peliculasRouter.post("/", async (req, res) => {
-  // await cinema.insertOne({
-  //   titulo: "test1",
-  //   autor: "Test4",
-  //   estreno: "Test5",
-  // });
+  if (!req.body) {
+    res.statusCode = 400;
+    res.send({
+      message: "Se necesitan los siguientes campos: titulo, autor, estreno",
+    });
+    return;
+  }
 
-  res.statusCode = 201;
-  res.send({ message: "Pelicula creada" });
+  const { titulo, autor, estreno } = req.body;
+
+  if (
+    typeof titulo !== "string" ||
+    typeof autor !== "string" ||
+    typeof estreno !== "number"
+  ) {
+    res.statusCode = 400;
+    res.send({ message: "Algunos de los campos son incorrectos" });
+    return;
+  }
+
+  try {
+    const pelicula = await movies.create({
+      titulo,
+      autor,
+      estreno,
+    });
+    res.statusCode = 201;
+    res.send(pelicula);
+  } catch (error) {
+    //Duplicado
+    if (error.code === 11000) {
+      res.statusCode = 400;
+      res.send({ message: "El titulo de la pelicula ya existe" });
+    } else {
+      res.statusCode = 500;
+      res.send({ message: "Error de servidor" });
+    }
+  }
+});
+
+// DELETE pelicula
+peliculasRouter.delete("/:id", async (req, res) => {
+  let pelicula;
+  try {
+    pelicula = await encontrarPelicula(req.params.id);
+    await movies.deleteOne({ _id: pelicula._id });
+    res.send({ message: "Pelicula eliminada" });
+  } catch (error) {
+    res.statusCode = 404;
+    res.send({ message: "Pelicula no encontrada" });
+  }
 });
 
 module.exports = peliculasRouter;

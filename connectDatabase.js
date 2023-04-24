@@ -1,17 +1,14 @@
-const { MongoClient } = require("mongodb");
-const cinema = require("./app");
 require("dotenv").config();
+const mongoose = require("mongoose");
+const movies = require("./routes/schemas/pelicula.schema");
 
 async function connectDatabase() {
-  const dbClient = new MongoClient(process.env.MONGO_URI);
   try {
-    //Conectar a la base de datos
-    await dbClient.connect();
-    //Obtener la coleccion donde se guardan las peliculas
-    const moviesColl = dbClient.db("cinema").collection("movies");
-    console.log("Exported cinema");
-    //Exportar la coleccion
-    module.exports.cinema = moviesColl;
+    //Conectar a la base de datos MongoDB
+    await mongoose.connect(process.env.MONGO_URI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
   } catch (e) {
     console.error(e);
   }
