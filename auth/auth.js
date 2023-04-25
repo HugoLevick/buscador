@@ -11,13 +11,19 @@ passport.use(
     {
       usernameField: "email",
       passwordField: "password",
+      passReqToCallback: true,
     },
-    async function (email, password, done) {
+    async function (req, email, password, done) {
+      if (!req.body.name) return done("Nombre de usuario requerido");
       try {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email.match(emailRegex))
           return done(new Error("Proporciona un email correcto"), null);
-        const user = await userCollection.create({ email, password });
+        const user = await userCollection.create({
+          email,
+          password,
+          name: req.body.name,
+        });
         return done(null, user);
       } catch (error) {
         //Duplicado
@@ -47,10 +53,11 @@ passport.use(
             message: "Usuario o contraseña incorrecta",
           });
 
-        if (!user.validatePassword(password))
+        if (!user.validatePassword(password)) {
           return done(null, null, {
             message: "Usuario o contraseña incorrecta",
           });
+        }
 
         return done(null, user);
       } catch (error) {

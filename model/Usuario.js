@@ -13,6 +13,11 @@ const UserSchema = new Schema({
     required: true,
   },
 
+  name: {
+    type: String,
+    required: true,
+  },
+
   rol: {
     type: String,
   },
@@ -24,7 +29,7 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-UserSchema.methods.validatePassword = async function (password) {
+UserSchema.methods.validatePassword = function (password) {
   const user = this;
   const compare = bcrypt.compareSync(password, user.password);
   return compare;

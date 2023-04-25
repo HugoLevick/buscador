@@ -94,16 +94,21 @@ peliculasRouter.post(
 );
 
 // DELETE pelicula
-peliculasRouter.delete("/:id", async (req, res) => {
-  let pelicula;
-  try {
-    pelicula = await encontrarPelicula(req.params.id);
-    await movies.deleteOne({ _id: pelicula._id });
-    res.send({ message: "Pelicula eliminada" });
-  } catch (error) {
-    res.statusCode = 404;
-    res.send({ message: "Pelicula no encontrada" });
+peliculasRouter.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    let pelicula;
+    console.log(req.user);
+    try {
+      pelicula = await encontrarPelicula(req.params.id);
+      //await movies.deleteOne({ _id: pelicula._id });
+      res.send({ message: "Pelicula eliminada" });
+    } catch (error) {
+      res.statusCode = 404;
+      res.send({ message: "Pelicula no encontrada" });
+    }
   }
-});
+);
 
 module.exports = peliculasRouter;
