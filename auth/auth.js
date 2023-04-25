@@ -20,7 +20,13 @@ passport.use(
         const user = await userCollection.create({ email, password });
         return done(null, user);
       } catch (error) {
-        done(error);
+        //Duplicado
+        if (error.code === 11000) {
+          done("Ese correo ya esta registrado");
+        } else {
+          console.log(error);
+          done("Error de servidor");
+        }
       }
     }
   )
