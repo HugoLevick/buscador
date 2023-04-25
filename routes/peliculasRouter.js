@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 //Usado para validacion de id
 const ValidarMongoId = require("mongodb").ObjectId.isValid;
-const movies = require("./schemas/pelicula.schema");
+const movies = require("../model/Pelicula");
 
 const peliculasRouter = express.Router();
 peliculasRouter.use(bodyParser.json());
@@ -75,7 +75,10 @@ peliculasRouter.get("/", async function (req, res) {
   const search = req.query.s;
   res.send(
     await movies.find(
-      search ? { titulo: new RegExp(`(.+)?${search}(.+)?`) } : undefined
+      //prettier-ignore
+      search
+      ? { titulo: new RegExp(`(.+)?${search}(.+)?`, "i") }
+      : undefined
     )
   );
 });

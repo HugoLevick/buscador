@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const movies = require("./routes/schemas/pelicula.schema");
+const movies = require("./model/Pelicula");
 
 async function connectDatabase() {
   try {
