@@ -12,9 +12,14 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+
+  rol: {
+    type: String,
+  },
 });
 
 UserSchema.pre("save", async function (next) {
+  if (!this.rol) this.rol = "USUARIO";
   this.password = bcrypt.hashSync(this.password, 10);
   next();
 });

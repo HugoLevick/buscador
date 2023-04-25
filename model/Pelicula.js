@@ -16,6 +16,11 @@ const MovieSchema = new Schema({
     type: Number,
     required: true,
   },
+
+  usuario_id: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = model("Movie", MovieSchema);
