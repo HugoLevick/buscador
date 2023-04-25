@@ -1,3 +1,52 @@
+a svg  {
+  height: 30px;
+}
+
+.login {
+  align-items: center;
+  display: flex;
+  margin: auto;
+  justify-content: end;
+}
+
+.icon-container {
+  margin-left: .5rem;
+}
+
+.title-container {
+  text-align: center;
+  font-weight: bold;
+}
+
+.animate-charcter
+{
+   text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  color: #fff;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+  display: inline-block;
+  font-size: 70px;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}
+
 button {
     height: 2rem;
 }
@@ -14,10 +63,25 @@ button svg {
     font: 16px Arial;  
   }
   
+  .container {
+    height: 200px;
+    position: relative;
+  }
+  
+  .search-box {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
   /*the container must be positioned relative:*/
   .autocomplete {
     position: relative;
     display: inline-block;
+    text-align: center;
   }
   
   input {
