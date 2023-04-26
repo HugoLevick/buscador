@@ -66,16 +66,16 @@ peliculasRouter.post(
     if (!req.body) {
       res.statusCode = 400;
       res.send({
-        message: "Se necesitan los siguientes campos: titulo, autor, estreno",
+        message: "Se necesitan los siguientes campos: titulo, actores, estreno",
       });
       return;
     }
 
-    const { titulo, autor, estreno } = req.body;
+    const { titulo, actores, estreno } = req.body;
 
     if (
       typeof titulo !== "string" ||
-      typeof autor !== "string" ||
+      typeof actores !== "string" ||
       typeof estreno !== "number"
     ) {
       res.statusCode = 400;
@@ -86,7 +86,7 @@ peliculasRouter.post(
     try {
       const pelicula = await movies.create({
         titulo,
-        autor,
+        actores,
         estreno,
         usuario_id: req.user._id,
       });

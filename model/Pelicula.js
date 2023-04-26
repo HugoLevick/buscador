@@ -7,7 +7,7 @@ const MovieSchema = new Schema({
     unique: true,
   },
 
-  autor: {
+  actores: {
     type: String,
     required: true,
   },

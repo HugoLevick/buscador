@@ -24,7 +24,7 @@ async function obtenerPeticiones() {
     html += `
     <div>
         <h1>${peticion.pelicula.titulo}</h1>
-        <p>${peticion.pelicula.autor}</p>
+        <p>${peticion.pelicula.actores}</p>
         <button onclick="borrarPelicula('${peticion.pelicula._id}')">Borrar pelicula</button>
     </div>
     `;
@@ -44,7 +44,7 @@ async function obtenerTodas() {
     html += `
     <div>
         <h1>${pelicula.titulo}</h1>
-        <p>${pelicula.autor}</p>
+        <p>${pelicula.actores}</p>
         <button onclick="borrarPelicula('${pelicula._id}')">Borrar pelicula</button>
     </div>
     `;
