@@ -68,7 +68,17 @@ button svg {
   }
 
   .addMovie {
-    background-color: green;
+    background-color: rgb(0, 223, 0);
+    padding: .5rem 1.5rem;
+    border-radius: 6px;
+    color: white;
+  }
+
+  .deleteMovie {
+    background-color: red;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    color: white;
   }
 
   .crud-container a {
@@ -147,3 +157,45 @@ button svg {
   .infoMovie {
     margin-top: 3rem;
   }
+
+
+
+  .movie-details {  
+    box-sizing: border-box;  
+    background: #000; 
+    font-family: verdana, arial;  
+    font-size: 1rem; color: #fff; 
+    line-height: 1.6em; 
+    box-shadow: 0px 25px 25px -8px rgba(0, 0, 0, .7);
+    padding: 0 0 30px; margin: auto;
+    max-width: 300px; 
+    text-align: -webkit-center; zoom: 1; }
+
+
+.movie-img  { box-sizing: border-box; 
+    overflow: hidden; }
+
+.movie-details img { 
+  border-radius: 0 0 20px 20px; 
+  height: 150px;  width: auto ; 
+  max-width: 550px; 
+}
+
+.movie-details .movie-info { 
+  box-sizing: border-box; 
+  margin: 20px; 
+  letter-spacing: 1.2px; 
+}
+    
+.movie-info .movie-name {  
+  border-bottom: 1.5px solid rgb(47, 47, 47); 
+  font-size: 1.2  rem; font-weight: 700; 
+  line-height: 30px;  
+}
+
+.movie-details .post-line { 
+  border-bottom: 2.5px solid rgb(47, 47, 47); 
+  padding: 15px 0; 
+}
+
+.post-line span { font-weight: 700; font-size: 1rem; }
