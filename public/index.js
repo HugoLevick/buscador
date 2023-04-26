@@ -23,16 +23,20 @@ async function addMovieForm() {
 
         if (response.ok) {
           console.log("ok");
+          Swal.fire("Success", "The movie was added", "success");
+        } else {
+          const data = await response.json();
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: data.message,
+          });
         }
       } catch (error) {
         console.log(error);
       }
     },
   });
-
-  if (formValues) {
-    Swal.fire("ok");
-  }
 }
 
 function autocomplete(inp) {
@@ -174,7 +178,34 @@ function logOut() {
   window.location = "/login.html";
 }
 
+async function setAdminBtn(jwt) {
+  try {
+    const res = await fetch("/usuarios/perfil", {
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
+    });
+    const usuario = (await res.json()).user;
+    console.log(usuario);
+    if (usuario.rol === "ADMIN") {
+      document.querySelector(
+        ".login"
+      ).innerHTML = `<a href="/requests.html">ADMIN</a> 
+	  <div style="font-weight: bold;" id="loginText">Log Out</div>
+	  <div class="icon-container">
+		  <a onclick="logOut()"class="icon" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+				  <path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"></path>
+			  </svg></a>
+	  </div>`;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 if (localStorage.getItem("token")) {
+  setAdminBtn(localStorage.getItem("token"));
+
   document.querySelector(".login").innerHTML = `
   <div style="font-weight: bold;" id="loginText">Log Out</div>
   <div class="icon-container">
@@ -197,7 +228,7 @@ if (localStorage.getItem("token")) {
   document.querySelector(
     ".crud-container"
   ).innerHTML = `        <a onclick="addMovieForm()" class="addMovie">Add</a>
-  <a onclick="">Delete</a>`;
+  <a onclick="window.location = '/profile.html'" class="deleteMovie">Delete</a>`;
 }
 
 document
@@ -215,10 +246,41 @@ document
 
       if (response.ok) {
         const infoMovie = await response.json();
-        console.log(infoMovie);
         document.getElementById("infoMovie").innerHTML = infoMovie.actores;
       }
     } catch (error) {
       console.log(error);
     }
   });
+
+async function showMovies() {
+  const response = await fetch("/peliculas", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const infoMovie = await response.json();
+
+  if (response.ok) {
+    console.log(infoMovie);
+
+    for (let i = 0; i < infoMovie.length; i++) {
+      console.log(infoMovie[i].actores);
+      document.querySelector(
+        ".movie-details"
+      ).innerHTML += `<div class="movie-img">
+		<img
+			src="${infoMovie[i].url}" />
+	</div>
+	<div class="movie-info">
+		<span class="movie-name">&nbsp;${infoMovie[i].titulo} </span> (${infoMovie[i].estreno})
+		<div class="post-line">
+			<span>Actors:</span><br>&nbsp;${infoMovie[i].actores}<br/>
+		</div>
+	</div>`;
+    }
+  }
+}
+
+showMovies();
