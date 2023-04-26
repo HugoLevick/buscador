@@ -31,7 +31,7 @@ async function addMovieForm() {
   });
 
   if (formValues) {
-    Swal.fire("ok");
+    Swal.fire("Success", "The movie was added", "success");
   }
 }
 
