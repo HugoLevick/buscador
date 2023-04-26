@@ -21,6 +21,12 @@ const MovieSchema = new Schema({
     type: String,
     required: true,
   },
+
+  url: {
+    type: String,
+    default:
+      "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg",
+  },
 });
 
 module.exports = model("Movie", MovieSchema);

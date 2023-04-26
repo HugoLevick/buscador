@@ -18,20 +18,25 @@ peliculasRouter.get("/", async function (req, res) {
 
   const search = req.query.s
     ?.replace(/\./g, "\\.")
+    .replace(/\\/g, "\\\\")
     .replace(/\(/g, "\\(")
     .replace(/\)/g, "\\)")
     .replace(/\*/g, "\\*")
     .replace(/\+/g, "\\+")
     .replace(/\?/g, "\\?");
 
-  res.send(
-    await movies.find(
-      //prettier-ignore
-      search
-      ? { titulo: new RegExp(`(.+)?${search}(.+)?`, "i") }
-      : undefined
-    )
-  );
+  try {
+    res.send(
+      await movies.find(
+        //prettier-ignore
+        search
+          ? { titulo: new RegExp(`(.+)?${search}(.+)?`, "i") }
+          : undefined
+      )
+    );
+  } catch (error) {
+    res.status(500).send({ message: "Error de servidor" });
+  }
 });
 
 async function encontrarPelicula(terminoBusqueda) {
@@ -71,7 +76,7 @@ peliculasRouter.post(
       return;
     }
 
-    const { titulo, actores, estreno } = req.body;
+    const { titulo, actores, estreno, url } = req.body;
 
     if (
       typeof titulo !== "string" ||
@@ -88,6 +93,7 @@ peliculasRouter.post(
         titulo,
         actores,
         estreno,
+        url,
         usuario_id: req.user._id,
       });
       res.statusCode = 201;
