@@ -30,7 +30,7 @@ async function establecerDatos() {
     html += `
     <div>
         <h1>${pelicula.titulo}</h1>
-        <p>${pelicula.autor}</p>
+        <p>${pelicula.actores}</p>
         <button onclick="borrarPelicula('${pelicula._id}')">Solicitar borrado</button>
     </div>
     `;

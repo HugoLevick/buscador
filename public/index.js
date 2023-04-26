@@ -9,12 +9,12 @@ async function addMovieForm() {
     preConfirm: async () => {
       try {
         const titulo = document.getElementById("swal-input1").value;
-        const autor = document.getElementById("swal-input2").value;
+        const actores = document.getElementById("swal-input2").value;
         const estreno = parseInt(document.getElementById("swal-input3").value);
         const jwt = localStorage.getItem("token");
         const response = await fetch("/peliculas", {
           method: "POST",
-          body: JSON.stringify({ titulo, autor, estreno }),
+          body: JSON.stringify({ titulo, actores, estreno }),
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + jwt,
@@ -51,7 +51,6 @@ function autocomplete(inp) {
     });
     if (response.ok) {
       movies = await response.json();
-      console.log(movies);
     }
 
     closeAllLists(); // close any already open lists of autocompleted values
@@ -205,7 +204,6 @@ document
   .getElementById("selectedMovie")
   .addEventListener("submit", async (event) => {
     event.preventDefault();
-    console.log("aqui");
     try {
       const movieName = document.getElementById("myInput").value;
       const response = await fetch("/peliculas/" + movieName, {
@@ -217,7 +215,8 @@ document
 
       if (response.ok) {
         const infoMovie = await response.json();
-        document.getElementById("infoMovie").innerHTML = infoMovie.autor;
+        console.log(infoMovie);
+        document.getElementById("infoMovie").innerHTML = infoMovie.actores;
       }
     } catch (error) {
       console.log(error);
