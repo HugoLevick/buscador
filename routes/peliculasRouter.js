@@ -11,7 +11,19 @@ peliculasRouter.use(bodyParser.json());
 
 // GET todas las peliculas
 peliculasRouter.get("/", async function (req, res) {
-  const search = req.query.s;
+  if (req.query.fromUser) {
+    res.send(await movies.find({ usuario_id: req.query.fromUser }));
+    return;
+  }
+
+  const search = req.query.s
+    ?.replace(/\./g, "\\.")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/\*/g, "\\*")
+    .replace(/\+/g, "\\+")
+    .replace(/\?/g, "\\?");
+
   res.send(
     await movies.find(
       //prettier-ignore
@@ -108,7 +120,7 @@ peliculasRouter.delete(
       ) {
         if (req.user.rol === "USUARIO") {
           const solicitudPrevia = await requests.findOne({
-            pelicula_id: pelicula._id,
+            "pelicula._id": pelicula._id,
           });
           if (solicitudPrevia) {
             res.statusCode = 400;
@@ -117,13 +129,13 @@ peliculasRouter.delete(
             });
           }
           await requests.create({
-            pelicula_id: pelicula._id,
+            pelicula,
             solicitante_id: req.user._id,
           });
           return res.send({ message: "Pelicula solicitada para eliminacion" });
         } else {
           await movies.deleteOne({ _id: pelicula._id });
-          await requests.deleteOne({ pelicula_id: pelicula._id });
+          await requests.deleteOne({ "pelicula._id": pelicula._id });
           return res.send({ message: "Pelicula eliminada" });
         }
       } else {

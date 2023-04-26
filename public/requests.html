@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <title>Search Engine</title>
+  </head>
+
+  <body>
+    <a href="/">Volver</a>
+    <div class="title-container">
+      <h1 class="animate-charcter">Solicitudes de Eliminacion</h1>
+    </div>
+    <button onclick="obtenerTodas()">Mostrar todas las peliculas</button>
+    <button onclick="obtenerPeticiones()">Mostrar todas las solicitudes</button>
+
+    <div class="container" id="request-container"></div>
+  </body>
+  <script src="requests.js"></script>
+</html>

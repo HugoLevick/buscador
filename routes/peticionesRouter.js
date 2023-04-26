@@ -9,7 +9,7 @@ peticionesRouter.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     if (req.user.rol !== "ADMIN") {
-      res.status = 401;
+      res.statusCode = 401;
       res.send("Unauthorized");
       return;
     }

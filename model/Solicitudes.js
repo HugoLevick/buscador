@@ -4,12 +4,12 @@ const RequestSchema = new Schema({
   solicitante_id: {
     type: String,
     required: true,
-    unique: true,
   },
 
-  pelicula_id: {
-    type: String,
+  pelicula: {
+    type: Object,
     required: true,
+    unique: true,
   },
 });
 
