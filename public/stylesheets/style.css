@@ -131,3 +131,7 @@ button svg {
     background-color: DodgerBlue !important; 
     color: #ffffff; 
   }
+  
+  .infoMovie {
+    margin-top: 3rem;
+  }

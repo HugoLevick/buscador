@@ -13,7 +13,7 @@
 <body>
 
     <div class="login">
-        <div style="font-weight: bold;">Login</div>
+        <div style="font-weight: bold;" id="loginText">Login</div>
         <div class="icon-container">
             <a href="/login.html" class="icon"><svg xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -30,11 +30,12 @@
 
     <div class="container">
         <div class="search-box">
-            <form autocomplete="off" action="/action_page.php">
+            <form autocomplete="off" id="selectedMovie">
                 <div class="autocomplete" style="width:300px;">
                     <input id="myInput" type="text" name="myMovie" placeholder="Movie">
                 </div>
                 <input type="submit">
+                <div class="infoMovie" id="infoMovie"></div>
             </form>
         </div>
     </div>
