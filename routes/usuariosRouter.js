@@ -10,7 +10,6 @@ const users = require("../model/Usuario");
 const usuariosRouter = express.Router();
 usuariosRouter.use(bodyParser.json());
 
-// GET todas las peliculas
 //prettier-ignore
 usuariosRouter.post("/signup",
     passport.authenticate("signup", { session: false }), async (req, res, next) => {
