@@ -3,18 +3,20 @@ async function addMovieForm() {
     title: "Add movie",
     html:
       '<input id="swal-input1" class="swal2-input" placeholder="Title">' +
-      '<input id="swal-input2" class="swal2-input" placeholder="Author">' +
-      '<input id="swal-input3" class="swal2-input" placeholder="Release date">',
+      '<input id="swal-input2" class="swal2-input" placeholder="Actors">' +
+      '<input id="swal-input3" class="swal2-input" placeholder="Release date">' +
+      '<input id="swal-input4" class="swal2-input" placeholder="URL">',
     focusConfirm: false,
     preConfirm: async () => {
       try {
         const titulo = document.getElementById("swal-input1").value;
         const actores = document.getElementById("swal-input2").value;
         const estreno = parseInt(document.getElementById("swal-input3").value);
+        const url = document.getElementById("swal-input4").value;
         const jwt = localStorage.getItem("token");
         const response = await fetch("/peliculas", {
           method: "POST",
-          body: JSON.stringify({ titulo, actores, estreno }),
+          body: JSON.stringify({ titulo, actores, estreno, url }),
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + jwt,
@@ -246,6 +248,15 @@ document
 
       if (response.ok) {
         const infoMovie = await response.json();
+        Swal.fire({
+          title: `${infoMovie.titulo} (${infoMovie.estreno})`,
+          text: infoMovie.actores,
+          imageUrl: infoMovie.url,
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: "Custom image",
+        });
+
         document.getElementById("infoMovie").innerHTML = infoMovie.actores;
       }
     } catch (error) {
