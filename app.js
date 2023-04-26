@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const usuariosRouter = require("./routes/usuariosRouter");
 const indexRouter = require("./routes/indexRouter");
 const peliculasRouter = require("./routes/peliculasRouter");
+const peticionesRouter = require("./routes/peticionesRouter");
 require("./auth/auth");
 
 const app = express();
@@ -23,6 +24,7 @@ async function startServer() {
   app.use("/", indexRouter);
   app.use("/peliculas", peliculasRouter);
   app.use("/usuarios", usuariosRouter);
+  app.use("/peticiones", peticionesRouter);
 
   app.use(bodyParser.json());
   app.use(express.static("public"));

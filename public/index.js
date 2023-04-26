@@ -44,7 +44,8 @@ function autocomplete(inp) {
       i,
       movies,
       val = this.value;
-    const response = await fetch("/peliculas?s=" + val, {
+
+    const response = await fetch("/peliculas?s=" + encodeURIComponent(val), {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

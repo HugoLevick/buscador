@@ -4,13 +4,26 @@ const bodyParser = require("body-parser");
 //Usado para validacion de id
 const ValidarMongoId = require("mongodb").ObjectId.isValid;
 const movies = require("../model/Pelicula");
+const requests = require("../model/Solicitudes");
 
 const peliculasRouter = express.Router();
 peliculasRouter.use(bodyParser.json());
 
 // GET todas las peliculas
 peliculasRouter.get("/", async function (req, res) {
-  const search = req.query.s;
+  if (req.query.fromUser) {
+    res.send(await movies.find({ usuario_id: req.query.fromUser }));
+    return;
+  }
+
+  const search = req.query.s
+    ?.replace(/\./g, "\\.")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/\*/g, "\\*")
+    .replace(/\+/g, "\\+")
+    .replace(/\?/g, "\\?");
+
   res.send(
     await movies.find(
       //prettier-ignore
@@ -45,7 +58,7 @@ peliculasRouter.get("/:termino", async (req, res) => {
   }
 });
 
-// POST nueva pelicula
+// POST nueva pelicula (auth)
 peliculasRouter.post(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -53,16 +66,16 @@ peliculasRouter.post(
     if (!req.body) {
       res.statusCode = 400;
       res.send({
-        message: "Se necesitan los siguientes campos: titulo, autor, estreno",
+        message: "Se necesitan los siguientes campos: titulo, actores, estreno",
       });
       return;
     }
 
-    const { titulo, autor, estreno } = req.body;
+    const { titulo, actores, estreno } = req.body;
 
     if (
       typeof titulo !== "string" ||
-      typeof autor !== "string" ||
+      typeof actores !== "string" ||
       typeof estreno !== "number"
     ) {
       res.statusCode = 400;
@@ -73,7 +86,7 @@ peliculasRouter.post(
     try {
       const pelicula = await movies.create({
         titulo,
-        autor,
+        actores,
         estreno,
         usuario_id: req.user._id,
       });
@@ -93,18 +106,44 @@ peliculasRouter.post(
   }
 );
 
-// DELETE pelicula
+// DELETE pelicula (auth)
 peliculasRouter.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     let pelicula;
-    console.log(req.user);
     try {
       pelicula = await encontrarPelicula(req.params.id);
-      //await movies.deleteOne({ _id: pelicula._id });
-      res.send({ message: "Pelicula eliminada" });
+      if (
+        pelicula.usuario_id === req.user._id.toHexString() ||
+        req.user.rol === "ADMIN"
+      ) {
+        if (req.user.rol === "USUARIO") {
+          const solicitudPrevia = await requests.findOne({
+            "pelicula._id": pelicula._id,
+          });
+          if (solicitudPrevia) {
+            res.statusCode = 400;
+            return res.send({
+              message: "Esta pelicula ya tiene una solicitud de eliminacion",
+            });
+          }
+          await requests.create({
+            pelicula,
+            solicitante_id: req.user._id,
+          });
+          return res.send({ message: "Pelicula solicitada para eliminacion" });
+        } else {
+          await movies.deleteOne({ _id: pelicula._id });
+          await requests.deleteOne({ "pelicula._id": pelicula._id });
+          return res.send({ message: "Pelicula eliminada" });
+        }
+      } else {
+        res.statusCode = 401;
+        res.send({ message: "No tienes permiso para borrar esta pelicula" });
+      }
     } catch (error) {
+      console.log(error);
       res.statusCode = 404;
       res.send({ message: "Pelicula no encontrada" });
     }

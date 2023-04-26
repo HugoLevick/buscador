@@ -75,7 +75,8 @@ passport.use(
     },
     async (token, done) => {
       try {
-        return done(null, token.user);
+        const user = await userCollection.findOne({ _id: token.user._id });
+        return done(null, user);
       } catch (error) {
         return done(error);
       }
