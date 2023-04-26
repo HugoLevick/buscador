@@ -62,6 +62,18 @@ button svg {
   body {
     font: 16px Arial;  
   }
+
+  .crud-container {
+    text-align: center;
+  }
+
+  .addMovie {
+    background-color: green;
+  }
+
+  .crud-container a {
+    cursor: pointer;
+  }
   
   .container {
     height: 200px;
